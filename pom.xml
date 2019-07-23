@@ -12,6 +12,7 @@
     <artifactId>jenkins-springboot-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>jenkins-springboot-demo</name>
+    <packaging>jar</packaging>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -44,6 +45,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
     </dependencies>
 
