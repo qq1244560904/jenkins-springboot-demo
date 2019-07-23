@@ -16,7 +16,7 @@ public class JenkinsSpringbootDemoApplication {
 
     @RequestMapping(value = "jenkinsSpringbootDemo",method = RequestMethod.GET)
     public String jenkinsSpringbootDemo(){
-        return "hello";
+        return "get hello";
     }
 
 }
