@@ -26,6 +26,7 @@ pipeline {
             }
             stage('Deliver') {
                 steps {
+                    sh 'chmod 777 ./script/docker1.sh'
                     sh './script/docker1.sh'
                 }
             }
