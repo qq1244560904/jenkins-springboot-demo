@@ -12,18 +12,12 @@ pipeline {
         string(name: 'DOCKER_IMAGE', defaultValue: 'jenkins-springboot-demo', description: 'docker镜像名')
     }
 
-
-    options {
-            skipStagesAfterUnstable()
-    }
     stages {
             stage('checkout') {
                 steps {
                    checkout scm
                 }
             }
-
-
 
             stage('Build') {
                 when { expression { env.GIT_TAG != null } }
