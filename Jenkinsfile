@@ -11,10 +11,10 @@ pipeline {
         stages {
             stage('checkout') {
                 steps {
-                    checkout scm
-                   NAME=`mvn help:evaluate -Dexpression=project.name | grep "^[^\[]"`
+                   checkout scm
+                   sh "NAME=`mvn help:evaluate -Dexpression=project.name | grep "^[^\[]"`"
                    echo $NAME
-                   VERSION=`mvn help:evaluate -Dexpression=project.version | grep "^[^\[]"`
+                   sh "VERSION=`mvn help:evaluate -Dexpression=project.version | grep "^[^\[]"`"
                    echo $VERSION
                     img_name = "${NAME}-${VERSION}"
                     echo "artifactId: ${NAME}, version: ${VERSION}"
