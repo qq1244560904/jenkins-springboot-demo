@@ -12,9 +12,12 @@ pipeline {
             stage('checkout') {
                 steps {
                     checkout scm
-                    pom = readMavenPom file: 'pom.xml'
-                    img_name = "${pom.groupId}-${pom.artifactId}"
-                    echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
+                   NAME=`mvn help:evaluate -Dexpression=project.name | grep "^[^\[]"`
+                   echo $NAME
+                   VERSION=`mvn help:evaluate -Dexpression=project.version | grep "^[^\[]"`
+                   echo $VERSION
+                    img_name = "${NAME}-${VERSION}"
+                    echo "artifactId: ${NAME}, version: ${VERSION}"
                     echo "docker-img-name: ${docker_img_name}"
                     echo "${JOB_NAME}"
                     script {
