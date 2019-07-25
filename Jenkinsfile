@@ -7,6 +7,7 @@ pipeline {
     }
     environment {
         GIT_TAG = sh(returnStdout: true,script: 'git describe --tags --always').trim()
+
     }
     parameters {
         string(name: 'DOCKER_IMAGE', defaultValue: 'jenkins-springboot-demo', description: 'docker镜像名')
