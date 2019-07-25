@@ -9,9 +9,32 @@ pipeline {
             skipStagesAfterUnstable()
         }
         stages {
+            stage('checkout') {
+                steps {
+                    checkout scm
+                    pom = readMavenPom file: 'pom.xml'
+                    img_name = "${pom.groupId}-${pom.artifactId}"
+                    echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
+                    echo "docker-img-name: ${docker_img_name}"
+                    echo "${JOB_NAME}"
+                    script {
+                    build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                        if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != null) {
+                         build_tag = "${env.BRANCH_NAME}-${build_tag}"
+                        }
+                    }
+
+                }
+            }
+        }
+        stages {
             stage('Build') {
                 steps {
                     sh 'mvn -B -DskipTests clean package'
+                    sh "docker build -t ${img_name}:${build_tag} " +
+                                    " --build-arg SPRING_PROFILE=default " +
+                                    " --build-arg JAR_FILE=target/${pom.artifactId}-${pom.version}.jar " +
+                                    " ."
                 }
             }
             stage('Test') {
@@ -26,8 +49,7 @@ pipeline {
             }
             stage('Deliver') {
                 steps {
-                    sh 'chmod 777 ./script/docker1.sh'
-                    sh './script/docker1.sh'
+
                 }
             }
         }
