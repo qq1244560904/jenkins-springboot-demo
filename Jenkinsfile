@@ -5,39 +5,33 @@ pipeline {
             args '-v /root/.m2:/root/.m2'
         }
     }
+    environment {
+        GIT_TAG = sh(returnStdout: true,script: 'git describe --tags --always').trim()
+    }
+    parameters {
+        string(name: 'DOCKER_IMAGE', defaultValue: 'jenkins-springboot-demo', description: 'docker镜像名')
+    }
+
+
     options {
             skipStagesAfterUnstable()
-        }
-        stages {
+    }
+    stages {
             stage('checkout') {
                 steps {
                    checkout scm
-                   sh "NAME=`mvn help:evaluate -Dexpression=project.name | grep "^[^\[]"`"
-                   echo $NAME
-                   sh "VERSION=`mvn help:evaluate -Dexpression=project.version | grep "^[^\[]"`"
-                   echo $VERSION
-                    img_name = "${NAME}-${VERSION}"
-                    echo "artifactId: ${NAME}, version: ${VERSION}"
-                    echo "docker-img-name: ${docker_img_name}"
-                    echo "${JOB_NAME}"
-                    script {
-                    build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-                        if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != null) {
-                         build_tag = "${env.BRANCH_NAME}-${build_tag}"
-                        }
-                    }
-
                 }
             }
-        }
-        stages {
+
+
+
             stage('Build') {
+                when { expression { env.GIT_TAG != null } }
                 steps {
                     sh 'mvn -B -DskipTests clean package'
-                    sh "docker build -t ${img_name}:${build_tag} " +
-                                    " --build-arg SPRING_PROFILE=default " +
-                                    " --build-arg JAR_FILE=target/${pom.artifactId}-${pom.version}.jar " +
-                                    " ."
+                    stash includes: 'target/*.jar', name: 'app'
+                    unstash 'app'
+                    sh "docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${params.DOCKER_IMAGE}:${GIT_TAG} ."
                 }
             }
             stage('Test') {
@@ -55,6 +49,6 @@ pipeline {
 
                 }
             }
-        }
+    }
 
 }
