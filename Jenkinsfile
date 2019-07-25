@@ -27,7 +27,7 @@ pipeline {
                         steps {
                             unstash 'app'
                             sh "docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${params.DOCKER_IMAGE}:${GIT_TAG} ."
-
+                            sh "docker stop jenkins-pipeline-demo"
                             sh "docker run -d --name jenkins-pipeline-demo -p 8002:8002 ${params.DOCKER_IMAGE}:${GIT_TAG}"
                         }
 
