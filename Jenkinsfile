@@ -23,7 +23,7 @@ parameters {
                         steps {
                             unstash 'app'
 
-                            sh "mvn docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${params.DOCKER_IMAGE} ."
+                            sh "docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${params.DOCKER_IMAGE} ."
 
                         }
 
