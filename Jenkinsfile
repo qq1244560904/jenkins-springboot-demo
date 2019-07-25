@@ -20,7 +20,7 @@ pipeline {
             }
 
             stage('Build') {
-                when { expression { env.GIT_TAG != null } }
+
                 steps {
                     sh 'mvn -B -DskipTests clean package'
                     stash includes: 'target/*.jar', name: 'app'
