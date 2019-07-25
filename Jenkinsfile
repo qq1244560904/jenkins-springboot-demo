@@ -1,18 +1,22 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
+    agent any
+
+    environment {
+        GIT_TAG = sh(returnStdout: true,script: 'git describe --tags --always').trim()
     }
 
-parameters {
-
+    parameters {
         string(name: 'DOCKER_IMAGE', defaultValue: 'jenkins-springboot-demo', description: 'docker镜像名')
-
     }
     stages {
+
             stage('checkout') {
+                agent {
+                        docker {
+                            image 'maven:3-alpine'
+                            args '-v /root/.m2:/root/.m2'
+                        }
+                }
                 steps {
                    git credentialsId: '1e42b478-2e0f-421a-9fda-250802d86cba', url: 'https://github.com/qq1244560904/jenkins-springboot-demo.git'
                    sh 'mvn clean package -Dfile.encoding=UTF-8 -DskipTests=true'
@@ -27,7 +31,7 @@ parameters {
 
                         }
 
-                    }
+            }
 
     }
 

@@ -14,7 +14,7 @@ RUN apk update && apk add ca-certificates && \
     echo "Asia/Shanghai" > /etc/timezone
 
 COPY target/$JAR_FILE $WORK_PATH/
-
+EXPOSE 8002
 WORKDIR $WORK_PATH
 
 ENTRYPOINT exec java $JAVA_OPTS -jar $JAR_FILE
