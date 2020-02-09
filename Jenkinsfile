@@ -23,7 +23,8 @@ pipeline {
     stage('Docker Build') {
       steps {
         unstash 'app'
-        sh "docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${params.DOCKER_IMAGE}:${GIT_TAG} ."
+        sh "docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${params.DOCKER_HOST}/${params.DOCKER_IMAGE}:${GIT_TAG} ."
+        sh "docker push ${params.DOCKER_HOST}/${params.DOCKER_IMAGE}:${GIT_TAG}"
         sh 'docker stop jenkins-pipeline-demo'
         sh 'docker rm jenkins-pipeline-demo'
         sh "docker run -d --name jenkins-pipeline-demo -p 8002:8002 ${params.DOCKER_IMAGE}:${GIT_TAG}"
@@ -35,5 +36,6 @@ pipeline {
   }
   parameters {
     string(name: 'DOCKER_IMAGE', defaultValue: 'jenkins-springboot-demo', description: 'docker镜像名')
+    string(name: 'DOCKER_HOST', defaultValue: 'http://120.78.176.7:5000', description: '私有docker仓库地址')
   }
 }
