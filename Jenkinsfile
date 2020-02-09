@@ -27,7 +27,7 @@ pipeline {
         sh "docker push ${params.DOCKER_HOST}/${params.DOCKER_IMAGE}:${GIT_TAG}"
         sh 'docker stop jenkins-pipeline-demo'
         sh 'docker rm jenkins-pipeline-demo'
-        sh "docker run -d --name jenkins-pipeline-demo -p 8002:8002 ${params.DOCKER_IMAGE}:${GIT_TAG}"
+        sh "docker run -d --name jenkins-pipeline-demo -p 8002:8002 ${params.DOCKER_HOST}/${params.DOCKER_IMAGE}:${GIT_TAG}"
       }
     }
   }
