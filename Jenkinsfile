@@ -36,6 +36,6 @@ pipeline {
   }
   parameters {
     string(name: 'DOCKER_IMAGE', defaultValue: 'jenkins-springboot-demo', description: 'docker镜像名')
-    string(name: 'DOCKER_HOST', defaultValue: 'http://120.78.176.7:5000', description: '私有docker仓库地址')
+    string(name: 'DOCKER_HOST', defaultValue: '120.78.176.7:5000', description: '私有docker仓库地址')
   }
 }
