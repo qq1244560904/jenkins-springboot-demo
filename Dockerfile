@@ -1,20 +1,11 @@
 FROM openjdk:8-jdk-alpine
 
-#构建参数
-ARG JAR_FILE
-ARG WORK_PATH="/opt/demo"
-# 环境变量
-ENV JAVA_OPTS="" \
-    JAR_FILE=${JAR_FILE}
 
 #设置时区
-RUN apk update && apk add ca-certificates && \
-    apk add tzdata && \
-    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
-    echo "Asia/Shanghai" > /etc/timezone
+RUN mvn package -DskipTests
 
-COPY target/$JAR_FILE $WORK_PATH/
+COPY target/jenkins-springboot-demo-SNAPSHOT.jar file/
 EXPOSE 8002
-WORKDIR $WORK_PATH
+WORKDIR file/
 
-ENTRYPOINT exec java $JAVA_OPTS -jar $JAR_FILE
+ENTRYPOINT exec java -jar jenkins-springboot-demo-SNAPSHOT.jar
