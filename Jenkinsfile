@@ -4,7 +4,7 @@ pipeline {
     stage('checkout') {
       agent {
         docker {
-          image 'maven:3-alpine'
+          image '${params.DOCKER_HOST}/maven:3-alpine'
           args '-v /root/.m2:/root/.m2'
         }
 
