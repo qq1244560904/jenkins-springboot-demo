@@ -11,7 +11,12 @@ pipeline {
       }
       steps {
         git(credentialsId: '1e42b478-2e0f-421a-9fda-250802d86cba', url: 'https://github.com/qq1244560904/jenkins-springboot-demo.git')
-        sh 'mvn clean package -Dfile.encoding=UTF-8 -DskipTests=true'
+        withMaven(
+            maven: 'M3',
+            mavenLocalRepo: '.repository') {
+                sh 'mvn clean package -Dfile.encoding=UTF-8 -DskipTests=true'
+        }
+        
         stash(includes: 'target/*.jar', name: 'app')
         retry(count: 5) {
           sh 'echo hello word'
