@@ -1,13 +1,20 @@
 FROM openjdk:8-jdk-alpine
 
-RUN apt-get update -qq && apt-get install -y maven && apt-get clean
+#构建参数
+ARG JAR_FILE
+ARG WORK_PATH="/opt/demo"
+# 环境变量
+ENV JAVA_OPTS="" \
+    JAR_FILE=${JAR_FILE}
 
-WORKDIR /code
-ADD pom.xml /code/pom.xml
-ADD src /code/src
 #设置时区
-RUN mvn package -DskipTests
+RUN apk update && apk add ca-certificates && \
+    apk add tzdata && \
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone
 
+COPY target/$JAR_FILE $WORK_PATH/
 EXPOSE 8002
+WORKDIR $WORK_PATH
 
-ENTRYPOINT exec java -jar target/jenkins-springboot-demo-SNAPSHOT.jar
+ENTRYPOINT exec java $JAVA_OPTS -jar $JAR_FILE
