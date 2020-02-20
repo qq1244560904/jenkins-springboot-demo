@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk-alpine
 
-RUN yum update -qq && yum install -y maven && yum clean
+RUN apt-get update -qq && apt-get install -y maven && apt-get clean
 
 WORKDIR /code
 ADD pom.xml /code/pom.xml
